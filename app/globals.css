@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-instant: 120ms;
+  --t-quick: 240ms;
+  --t-normal: 420ms;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #08090b;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+  body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-body text-[11px] font-semibold uppercase;
+    letter-spacing: 0.26em;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-champagne font-body text-[13px] font-semibold text-void disabled:opacity-40;
+    padding: 16px 28px;
+    transition: filter var(--t-instant) var(--ease-move), transform var(--t-instant) var(--ease-move);
+  }
+  .btn-primary:active { transform: scale(0.97); filter: brightness(1.08); }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-body text-[13px] font-semibold text-champagne;
+    padding: 15px 26px;
+    border: 1px solid #c9a961;
+    transition: filter var(--t-instant) var(--ease-move), transform var(--t-instant) var(--ease-move);
+  }
+  .btn-ghost:active { transform: scale(0.97); filter: brightness(1.6); }
+  .icon-btn {
+    @apply grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-black/45 text-bone backdrop-blur-md;
+    transition: transform var(--t-instant) var(--ease-move), background-color var(--t-quick);
+  }
+  .icon-btn:hover { background-color: rgba(0, 0, 0, 0.65); }
+  .icon-btn:active { transform: scale(0.94); }
+  .icon-btn svg { @apply h-5 w-5; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+}
+
+/* ---------- Live stage ---------- */
+.stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Local preview is mirrored in CSS; Decart receives a pre-mirrored stream (mirror: true). */
+.stage .camera { transform: scaleX(-1); }
+.stage .remote { opacity: 0; pointer-events: none; transition: opacity var(--t-quick); }
+.stage .remote.visible { opacity: 1; }
+.stage .remote.peek { opacity: 0 !important; }
+.stage .fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; mix-blend-mode: screen; }
+
+.framing .outline {
+  fill: none;
+  stroke: rgba(232, 213, 168, 0.85);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  transition: stroke var(--t-quick);
+}
+.framing.holding .outline { stroke: #7de0b8; stroke-dasharray: none; stroke-width: 3; }
+
+.soft-pulse { animation: softPulse 2.4s ease-in-out infinite; }
+@keyframes softPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+.fade-up { animation: fadeUp var(--t-normal) var(--ease-enter) both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.thumb-scan { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(201, 169, 97, 0.55) 50%, transparent 60%); background-size: 100% 220%; animation: thumbScan 1.4s linear infinite; }
+@keyframes thumbScan { from { background-position: 0 100%; } to { background-position: 0 -100%; } }
+
+.spinner { width: 34px; height: 34px; border-radius: 999px; border: 2px solid rgba(201, 169, 97, 0.2); border-top-color: #c9a961; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Landing hero: a slow scan line over the boutique photo. */
+.hero-scan {
+  background: linear-gradient(180deg, transparent, rgba(201, 169, 97, 0.18) 70%, rgba(232, 213, 168, 0.9) 98%, transparent);
+  animation: heroScan 4.5s var(--ease-move) infinite;
+}
+@keyframes heroScan { 0% { top: -10%; } 60%, 100% { top: 100%; } }
